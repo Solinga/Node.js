@@ -1,0 +1,67 @@
+0.课程目的
+	掌握node的模块
+
+一.os模块
+	totalmem:总共内存,单位字节
+	freemem: 空闲/剩余内存 
+	tmpdir 默认临时文件夹
+	hostname 默认操作系统的主机名
+	type操作系统名 windowsME NT 95 98 2000 XP 
+	Windows_NT
+	platform 操作系统平台 win32
+	cpus:CPU信息
+	networkInterfaces:网络接口
+	arch:cpu架构 x86 x64 arm ia32
+
+
+二.path模块
+	处理文件路径的模块
+	路径名dirname: /user/local/www
+
+	文件名basename
+	后缀名extname .sh 
+	解析路径parse解析
+		 var pobj = 
+	{ root: '/',
+   dir: '/user/local/www',
+   base: 'lamco.sh',
+   ext: '.sh',
+   name: 'lamco' }
+   win系统中以\结束
+
+	把路径对象转成路径字符串
+	format
+
+三.dns
+	用来解析域名
+	将域名解析为第一条找到的记录
+	lookup
+	反向即系IP地址.
+ 	dns.reverse(ip,function(err,name){
+ 	if (err) {
+ 		console.log(err.stack);
+ 	}
+ 	console.log(JSON.stringify(name));
+	 });
+	 });
+
+
+四.net模块
+	提供了一些用于底层的网络通信工具,包含创建服务器
+
+// //聊天原理, 终端中输入, 控制台中显示
+const net=require('net');
+//建立服务器
+var chat=net.createServer();
+//创建连接
+chat.on('connection',function(client){
+	client.write('hello world');
+
+	client.on('data',function(data){
+		console.log(data.toString());
+	})
+});
+//打开一个端口
+chat.listen(9011);
+
+console.log('telnet server ok!');
