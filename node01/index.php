@@ -58,6 +58,7 @@ $result = mysqli_query($conn, $sql);
 				echo "<td>{$row['id']}</td>";
 				echo "<td>{$row['username']}</td>";
 				echo "<td>{$row['password']}</td>";
+				//注意a标签
 				echo "<td><a href='javascript:' class='del' id='{$row['id']}'>删除</a></td>";
 				echo "</tr>";
 			}
@@ -65,7 +66,7 @@ $result = mysqli_query($conn, $sql);
 		</table>
 	</div>	
 </body>
-
+//给用户隐藏（实际让php慢慢删除）
 <script type="text/javascript">
 	$('.del').click(function(){
 	id=this.id;
