@@ -1,26 +1,63 @@
-'use strict';
-
-//1.事件
-//1.1引入事件模块
-// const evnts = require('events');
-// //1.2创建触发器对象
-// var evt = new evnts.EventEmitter();
-// //1.3创建一个函数处理程序
-// function eventhandler(){
-// 	console.log('1111');
-// 	console.log('2222');
+// 引入http模块
+// var http=require('http');
+// // 引入地址模块
+// var url=require('url');
+// var queryString=require('querystring');
+// var cs=function(req,res){
+// 	var uri=req.url;
+// 	var json=queryString.parse(url.parse(uri).query);
+// 	console.log(json);
+// 	res.write('1');
+// 	res.end();
 // }
-// //1.4绑定事件和事件的处理程序
-// evt.on('eventName',eventhandler);
-// //1.5触发触发器,执行
-// evt.emit('eventName');
-//node里面的事件, 只要有异步,就有事件
-//node模块:一个文件包起来, 得到一个对象
+// http.createServer(cs).listen(8566);
 
-//2.引入show模块
-const show  = require('./show');
-// //2.1使用show类构造方法
-// var obj1 = new show();
-// //2.3让方法调用
-// obj1.say();
-show.say();
+
+'use strict';
+//1.自架web服务器，引入http和URL和querystring和mysql四个模块
+var http =require('http');
+var url = require('url');
+var queryString = require('querystring');
+//连接数据库
+var mysql = require('mysql');
+
+// 回调函数
+var cs = function(req,res){
+	//这个值会经常变,请求一次就变一次
+	// res.write('jQuery111308636421768088602_1493532902268({"id":"1"})');
+	// 3.1接收请求URL
+	var uri = req.url;
+	var json = queryString.parse(url.parse(uri).query);
+	console.log(json);
+	var fname = json.cb;
+	var id = json.id;
+
+	var jsonstr = fname+'({"ok":"1"})';
+	//连接操作数据库
+	var conn = mysql.createConnection({
+		host:'localhost',
+		user:'root',
+		password:'123456',
+		database:'0606'
+	});
+	//操作数据库
+	conn.connect();
+	//测试一下,是否能连接上数据库
+	conn.ping(function(err){
+		console.log('mysql is OK');
+	});
+	//操作数据库
+	conn.query('delete from form0606 where id= '+id,function(err,rs){
+		if (rs.affectedRows == '1') {
+			//给前段jsonp返回成功删除的消息 ok :1
+			res.write(jsonstr);
+
+			//关闭响应
+			res.end();
+		}
+	});
+	conn.end();
+}
+// 2.打开端口时才用上面的回调函数
+http.createServer(cs).listen(8888);
+
